@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FetchBookmarkTitles {
-    public static final String DEST = "./target/txt/bookmarks.txt";
+    public static final String DEST = "./target/bookmarks.md";
 
-    public static final String SRC = "C:\\Users\\Zheng\\Desktop\\MySQL 8 Query Performance Tuning.pdf";
+    public static final String SRC = "";
 
     public static void main(String[] args) throws Exception {
         File file = new File(DEST);
@@ -37,9 +37,9 @@ public class FetchBookmarkTitles {
         }
 
         // See title's names in the console
-        // for (String title : titles) {
-        //     System.out.println(title);
-        // }
+        for (Title title : titles) {
+            System.out.println(title);
+        }
 
         createResultTxt(dest, titles);
     }
@@ -54,7 +54,6 @@ public class FetchBookmarkTitles {
         result.add(new Title(level, bookmarkTitle));
 
         List<PdfOutline> kids = outline.getAllChildren();
-        System.out.println(kids);
         if (kids != null) {
             for (PdfOutline kid : kids) {
                 int nextLevel = level + 1;
@@ -65,10 +64,8 @@ public class FetchBookmarkTitles {
 
     private void createResultTxt(String dest, List<Title> titles) throws IOException {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest)))) {
-            for (int i = 0; i < titles.size(); i++) {
-                Title title = titles.get(i);
-                int num = (title.level -1) *2;
-                String line = String.valueOf("    ").repeat(Math.max(0, num))+title.Content.replace(" ", " ")+"\n";
+            for (Title title : titles) {
+                String line = "#".repeat(title.level) + " " + title.Content.replace(" ", " ") + "\n\n";
                 writer.write(line);
             }
         }
@@ -76,12 +73,20 @@ public class FetchBookmarkTitles {
 }
 
 
-class Title{
+class Title {
     int level;
     String Content;
 
     public Title(int level, String content) {
         this.level = level;
         Content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Title{" +
+                "level=" + level +
+                ", Content='" + Content + '\'' +
+                '}';
     }
 }
